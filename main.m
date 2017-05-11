@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 11-May-2017 21:41:20
+% Last Modified by GUIDE v2.5 12-May-2017 00:21:28
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -92,17 +92,13 @@ fullPath = strcat(folderName, '/');
 files = [dir(fullfile(fullPath,'*jpg')); dir(fullfile(fullPath,'*.jpeg')); dir(fullfile(fullPath,'*.png'))];
 handles.files = files;
 
+set(handles.imagelistbox,'String', {files.name});
 
 % Show the first image
 axes(handles.axesImage);
 im = imread([fullPath files(1).name]);
 himage = imshow(im);
 
-% Set frame information
-[~, filename, ~] = fileparts(files(1).name);
-set(handles.textFrameID,'String', filename)
-set(handles.textWidth,'String', size(im,2))
-set(handles.textHeight,'String', size(im,1))
 
 handles.f = 1;
 handles.fullPath = fullPath;
@@ -182,9 +178,7 @@ if handles.f > 0
   axes(handles.axesImage);
   im = imread([handles.fullPath handles.files(handles.f).name]);
   imshow(im);
-  
-  [~, filename, ~] = fileparts(handles.files(handles.f).name);
-  set(handles.textFrameID,'String', filename)
+
 end
 
 
@@ -203,8 +197,6 @@ if handles.f < length(handles.files)
   im = imread([handles.fullPath handles.files(handles.f).name]);
   imshow(im);
   
-  [~, filename, ~] = fileparts(handles.files(handles.f).name);
-  set(handles.textFrameID,'String', filename)
 end
 
 
@@ -315,3 +307,41 @@ end
 
 handles.line = [pts1; pts2];
 guidata(hObject, handles);
+
+
+% --- Executes on selection change in imagelistbox.
+function imagelistbox_Callback(hObject, eventdata, handles)
+% hObject    handle to imagelistbox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns imagelistbox contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from imagelistbox
+
+if strcmp(get(hObject,'SelectionType'), 'Open')
+    'I do what I want! But only when clicked twice!'
+end
+
+% axes(handles.axesImage);
+% num=get(hObject,'value');
+% switch num
+%     case 1
+%         contents = cellstr(get(hObject,'String'));
+%         im = imread([handles.fullPath contents]);
+%         imshow(im);
+% end
+
+
+
+% --- Executes during object creation, after setting all properties.
+function imagelistbox_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to imagelistbox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
