@@ -107,9 +107,9 @@ set(handles.textHeight,'String', size(im,1))
 handles.f = 1;
 handles.fullPath = fullPath;
 
-handles.outer = [];
-handles.inner = [];
-handles.Line  = [];
+handles.outer = zeros(4,2);
+handles.inner = zeros(4,2);
+handles.Line  = zeros(4,2);
 guidata(hObject, handles);
 
 % --------------------------------------------------------------------
@@ -158,12 +158,14 @@ function buttonReset_Callback(hObject, eventdata, handles)
 % hObject    handle to buttonReset (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-delete(handles.h);
 
-set(handles.textX,'String', '');
-set(handles.textY,'String', '');
-set(handles.textW,'String', '');
-set(handles.textH,'String', '');
+handles.outer = [];
+handles.inner = [];
+handles.line = [];
+
+axes(handles.axesImage);
+im = imread([handles.fullPath handles.files(handles.f).name]);
+imshow(im);
 
 
 % --- Executes on button press in buttonPrev.
@@ -217,6 +219,10 @@ if ~isempty(handles.textX)
   handles.gt(handles.f,:) = handles.r(:)';
   guidata(hObject, handles);
 end
+
+
+
+
 
 
 % --- Executes on button press in buttonDone.
@@ -289,7 +295,7 @@ for i = 1 : 2
     end
 end
 
-pts2 = zeros(2,2);;
+pts2 = zeros(2,2);
 for i = 1 : 2
     hold on
     [x,y,button] = ginput(1);
@@ -305,5 +311,7 @@ for i = 1 : 2
         line([pts2(i-1,1), pts2(i,1)], [pts2(i-1,2), pts2(i,2)]);
     end
 end
-handles.outer = pts1;
+
+
+handles.line = [pts1; pts2];
 guidata(hObject, handles);
